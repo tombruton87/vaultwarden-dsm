@@ -2,18 +2,20 @@
 # vaultwarden shared folder. The setup container writes .env beside this.
 # Data lives in a Docker volume (vaultwarden_data): a DSM shared folder's ACLs
 # admit only the package's user. Backups go to the share.
+#
+# nginx (proxy) sits in front: HTTPS with DSM's certificate or a self-signed
+# one, or plain HTTP behind DSM's reverse proxy. Its config and certificate are
+# written into the vaultwarden_proxy volume by the setup container.
 services:
   server:
     image: ${VW_IMAGE:-vaultwarden/server:latest}
     container_name: vaultwarden-server
     restart: unless-stopped
-    ports:
-      - "${HTTP_PORT:-8222}:80"
     volumes:
       - data:/data
     environment:
       TZ: ${TZ:-UTC}
-      DOMAIN: ${APP_URL:-http://localhost:8222}
+      DOMAIN: ${APP_URL:-https://localhost:8222}
       # The admin page's token, hashed (argon2id) by the package; the plain token is shown once in the window.
       ADMIN_TOKEN: ${ADMIN_TOKEN_HASH}
       SIGNUPS_ALLOWED: ${SIGNUPS_ALLOWED:-true}
@@ -23,7 +25,7 @@ services:
       EXTENDED_LOGGING: "true"
       LOGIN_RATELIMIT_MAX_BURST: "10"
       LOGIN_RATELIMIT_SECONDS: "60"
-      # Behind DSM's reverse proxy the real client address arrives in X-Real-IP.
+      # The proxy in front passes the real client address (its own, or DSM's reverse proxy's header).
       IP_HEADER: X-Real-IP
     healthcheck:
       test: ["CMD", "/healthcheck.sh"]
@@ -32,5 +34,25 @@ services:
       retries: 5
       start_period: 60s
 
+  proxy:
+    image: ${PROXY_IMAGE:-nginx:stable-alpine}
+    container_name: vaultwarden-proxy
+    restart: unless-stopped
+    depends_on:
+      - server
+    ports:
+      - "${HTTP_PORT:-8222}:8080"
+    volumes:
+      - proxy:/etc/nginx/conf.d:ro
+    environment:
+      TZ: ${TZ:-UTC}
+    healthcheck:
+      test: ["CMD-SHELL", "wget -q -O /dev/null --no-check-certificate https://127.0.0.1:8080/alive || wget -q -O /dev/null http://127.0.0.1:8080/alive"]
+      interval: 30s
+      timeout: 10s
+      retries: 5
+      start_period: 30s
+
 volumes:
   data:
+  proxy:

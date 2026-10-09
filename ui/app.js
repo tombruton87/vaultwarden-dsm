@@ -49,6 +49,25 @@
     show: function () { P.loadLog("failed", "activity-log"); }, tick: function () { P.loadLog("failed", "activity-log"); },
     badge: function (st) { var n = ((st.app || {}).failed || {}).last_hour || 0; $("badge-activity").hidden = !(n >= 5); $("badge-activity").textContent = String(n); }
   });
+  P.register("site", {
+    fill: function (st) { var t = (st.app && st.app.tls) || {}; $("set-tls").value = t.mode || "dsm"; },
+    values: function () { return { tls: $("set-tls").value }; },
+    render: function (st) {
+      var t = (st.app && st.app.tls) || {}, c = t.cert, tb = $("tls-info"), note = $("tls-note"), acts = $("tls-actions"); P.clear(tb); P.clear(acts);
+      $("tls-card").hidden = t.mode === "off";
+      if (t.mode === "off") return;
+      if (!c) { P.kv(tb, "Certificate", "none yet — it's made or read when Vaultwarden starts"); note.textContent = ""; return; }
+      P.kv(tb, "From", t.source === "dsm" ? "DSM (the system default certificate)" : "the package (self-signed)");
+      P.kv(tb, "Issued to", c.subject || "–"); P.kv(tb, "Issued by", c.self_signed ? "itself (self-signed)" : (c.issuer || "–"));
+      P.kv(tb, "Expires", (c.expires || "–") + (typeof c.days_left === "number" ? " (" + (c.days_left < 0 ? "expired" : c.days_left + " days") + ")" : ""));
+      if (c.names) P.kv(tb, "Names", c.names.replace(/,/g, ", "));
+      note.textContent = t.mode === "dsm" && t.source === "self" ? "DSM's certificate wasn't found on this system, so a self-signed one is in use."
+        : c.self_signed ? "Self-signed: browsers warn once and the web vault then works; the Bitwarden apps and extensions need a certificate they trust — in DSM, get one from Let's Encrypt (Control Panel → Security → Certificate) and make it the system default."
+        : "Browsers and the Bitwarden apps trust this certificate as long as they reach Vaultwarden by one of its names.";
+      acts.appendChild(P.btn(t.mode === "dsm" ? "Read DSM's certificate again" : "Make a new self-signed certificate", "", function () { P.act("refreshcert", {}, t.mode === "dsm" ? null : "Make a new self-signed certificate? Browsers will warn once more."); }));
+    }
+  });
+  $("set-tls").addEventListener("change", function () { $("set-url").dataset.touched = "1"; var u = $("set-url").value.trim(); if ($("set-tls").value !== "off" && /^http:\/\//.test(u)) $("set-url").value = "https://" + u.slice(7); });
   P.register("secretNote", function (s) { return s.kind === "admin" ? "Open the admin page and paste it as the token. Keep it in your password manager." : ""; });
   P.register("storage", { render: function (app, st, box) { P.clear(box); var c = P.el("div", null, "card"); var h = P.el("h2", "Inside the data volume"); c.appendChild(h); var tbl = P.el("table"), tb = P.el("tbody"); tbl.appendChild(tb); c.appendChild(tbl);
     [["Database (db.sqlite3)", app["db.sqlite3"]], ["Attachments", app.attachments], ["Sends", app.sends], ["Icon cache (rebuilt as needed)", app.icon_cache]].forEach(function (p) { P.kv(tb, p[0], P.mb(p[1] || 0), true); }); box.appendChild(c); } });

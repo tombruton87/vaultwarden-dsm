@@ -1,3 +1,15 @@
+## 1.1.0 — 2026-10-09
+
+- HTTPS is served by the package itself: nginx in front of Vaultwarden with
+  DSM's system-default certificate (read from the NAS, refreshed daily so
+  renewals follow) or a self-signed one made at install. Chosen in the
+  install wizard and on the Site address tab, which also shows the
+  certificate in use, with a button to read DSM's again or make a new
+  self-signed one. Plain HTTP behind DSM's reverse proxy remains an option.
+- Failed sign-ins are kept for seven days in a file, so they survive a
+  restart or a new admin token.
+- Disabled accounts were shown as enabled; invited accounts as having 2FA.
+
 # Changelog
 
 ## 1.0.0

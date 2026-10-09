@@ -8,4 +8,15 @@
             { "key": "wizard_signups_closed", "desc": "No sign-ups: I'll invite people from the admin page", "defaultValue": false }
         ]
     }]
+}, {
+    "step_title": "HTTPS",
+    "items": [{
+        "type": "singleselect",
+        "desc": "The Bitwarden apps and browser extensions only talk to Vaultwarden over HTTPS, so the package serves HTTPS itself. This can be changed later in the Vaultwarden window.",
+        "subitems": [
+            { "key": "wizard_tls_dsm", "desc": "DSM's certificate: the system default from Control Panel → Security → Certificate (renewals are picked up daily)", "defaultValue": true },
+            { "key": "wizard_tls_self", "desc": "A self-signed certificate made by the package (browsers warn once; the apps need a trusted one)", "defaultValue": false },
+            { "key": "wizard_tls_off", "desc": "Plain HTTP: I'll put it behind DSM's reverse proxy myself", "defaultValue": false }
+        ]
+    }]
 }
