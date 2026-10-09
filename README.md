@@ -8,7 +8,7 @@ clean removal. It serves **HTTPS itself**, with DSM's own certificate. Built on 
 
 ## Download
 
-**[Download vaultwarden-1.1.0-1.spk](https://github.com/tombruton87/vaultwarden-dsm/releases/download/v1.1.0/vaultwarden-1.1.0-1.spk)** — or see [Releases](https://github.com/tombruton87/vaultwarden-dsm/releases/latest) for the newest.
+**[Download vaultwarden-1.1.1-1.spk](https://github.com/tombruton87/vaultwarden-dsm/releases/download/v1.1.1/vaultwarden-1.1.1-1.spk)** — or see [Releases](https://github.com/tombruton87/vaultwarden-dsm/releases/latest) for the newest.
 Install: Package Center → Manual Install → the `.spk` (DSM 7.2.1+; Container
 Manager is installed first if missing). The wizard asks for the NAS's address,
 a port, a time zone, whether sign-ups are open, and how to do HTTPS. Then open

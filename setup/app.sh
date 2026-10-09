@@ -118,8 +118,17 @@ cert_info() {   # → JSON about the certificate in the volume, kept in $VAR/cer
   jq -n -c --arg s "$subj" --arg i "$iss" --arg e "$exp" --argjson d "$days" --arg san "$sans" --arg src "$(env_get TLS_SOURCE)" \
     '{subject: $s, issuer: $i, expires: $e, days_left: $d, names: $san, self_signed: ($s == $i), source: $src}' > "$VAR/cert.json.tmp" && mv "$VAR/cert.json.tmp" "$VAR/cert.json"
 }
+fix_url_scheme() {   # the address's scheme follows the HTTPS mode → 0 when it changed
+  local url; url=$(env_get APP_URL)
+  if [[ "$(env_get TLS)" != off && "$url" == http://* ]]; then env_set APP_URL "https://${url#http://}"; say "the address is https://${url#http://} — Vaultwarden serves HTTPS itself"
+  elif [[ "$(env_get TLS)" == off && "$(env_get SSL_PROXY)" == 0 && "$url" == https://* ]]; then env_set APP_URL "http://${url#https://}"; say "the address is http://${url#https://} — HTTPS is off and nothing in front provides it"
+  else return 1; fi
+}
 setup_proxy() {   # the proxy's config and certificate for the chosen mode (every start, and when the setting changes)
-  local mode source tarf="$VAR/.cert.tar"; mode=$(env_get TLS); mode=${mode:-dsm}; source=$mode; : > "$tarf"
+  local mode source tarf="$VAR/.cert.tar"
+  [[ -n "$(env_get TLS)" ]] || { env_set TLS dsm; say "upgrade from 1.0: HTTPS with DSM's certificate is on now (the Site address tab can change it)"; }
+  fix_url_scheme || true
+  mode=$(env_get TLS); source=$mode; : > "$tarf"
   if [[ "$mode" == dsm ]]; then
     if ! { dsm_cert > "$tarf" && [[ -s "$tarf" ]]; }; then
       [[ "$(env_get TLS_SOURCE)" == self ]] || say "DSM's certificate wasn't found here (no system-default certificate, or not a Synology) — a self-signed one is used instead"
@@ -150,11 +159,9 @@ refresh_dsm_cert() {   # → 0 and "changed"/"same"/"none" in CERT_REFRESH
 }
 app_before_up() { setup_proxy || say "✗ the proxy couldn't be set up: $MSG"; }
 app_settings() {   # TLS from the request; the address's scheme follows the mode
-  local changed=0 url
+  local changed=0
   [[ -n "${TLS:-}" ]] && { env_set TLS "$TLS"; changed=1; }
-  url=$(env_get APP_URL)
-  if [[ "$(env_get TLS)" != off && "$url" == http://* ]]; then env_set APP_URL "https://${url#http://}"; say "the address is https:// — Vaultwarden serves HTTPS itself"; changed=1
-  elif [[ "$(env_get TLS)" == off && "$(env_get SSL_PROXY)" == 0 && "$url" == https://* ]]; then env_set APP_URL "http://${url#https://}"; say "the address is http:// — HTTPS is off and nothing in front provides it"; changed=1; fi
+  fix_url_scheme && changed=1
   setup_proxy || return 1
   reload_proxy; (( changed ))
 }

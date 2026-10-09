@@ -1,3 +1,10 @@
+## 1.1.1 — 2026-10-09
+
+- Upgrading from 1.0.0 left the address (and so every link in the window and
+  Vaultwarden's own DOMAIN) on http:// while the proxy served HTTPS. Each start
+  now reconciles the address with the HTTPS mode, and an upgraded install
+  gets HTTPS with DSM's certificate.
+
 ## 1.1.0 — 2026-10-09
 
 - HTTPS is served by the package itself: nginx in front of Vaultwarden with
