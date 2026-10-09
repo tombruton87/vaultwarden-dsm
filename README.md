@@ -10,7 +10,13 @@ clean removal. It serves **HTTPS itself**, with DSM's own certificate. Built on 
 
 ## Download
 
-**[Download vaultwarden-1.1.2-1.spk](https://github.com/tombruton87/vaultwarden-dsm/releases/download/v1.1.2/vaultwarden-1.1.2-1.spk)** — or see [Releases](https://github.com/tombruton87/vaultwarden-dsm/releases/latest) for the newest.
+### **[⬇ Download vaultwarden.spk](https://github.com/tombruton87/vaultwarden-dsm/releases/latest/download/vaultwarden.spk)**
+
+[![Latest release](https://img.shields.io/github/v/release/tombruton87/vaultwarden-dsm?label=latest&color=3b5068)](https://github.com/tombruton87/vaultwarden-dsm/releases/latest)
+
+That link always gives the newest version. Older ones are on the
+[Releases](https://github.com/tombruton87/vaultwarden-dsm/releases) page.
+
 Install: Package Center → Manual Install → the `.spk` (DSM 7.2.1+; Container
 Manager is installed first if missing). The wizard asks for the NAS's address,
 a port, a time zone, whether sign-ups are open, and how to do HTTPS. Then open
@@ -70,6 +76,15 @@ setup/app.sh      the hooks: HTTPS (DSM's or a self-signed certificate), admin t
 ui/               Admin, Users, Mail, Activity tabs; CGI validation of their actions
 wizard/           the Accounts and HTTPS pages of the install wizard
 tests/            steps for the chassis harness
+```
+
+Release: bump `VERSION`, add the changes to `CHANGELOG.md`, build, then attach
+the package twice, under its versioned name and as `vaultwarden.spk` (the
+download link above points at that name on the latest release):
+
+```bash
+cp dist/vaultwarden-X.Y.Z-1.spk /tmp/vaultwarden.spk
+gh release create vX.Y.Z dist/vaultwarden-X.Y.Z-1.spk /tmp/vaultwarden.spk
 ```
 
 Build: `chassis/build.sh . N`. Test: `chassis/tests/e2e.sh . up && chassis/tests/e2e.sh . act` on any Linux box with Docker.
