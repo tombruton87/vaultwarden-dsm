@@ -1,0 +1,31 @@
+    <section data-page="admin" hidden>
+      <div class="note">Vaultwarden's <b>admin page</b> (<a id="admin-link" href="#" target="_blank" rel="noopener">/admin</a>) is where users, organisations, SMTP and the finer settings live. It opens with a token. The package made one at install and keeps it hashed in the container; if it's lost, make a new one here — it's shown once.</div>
+      <div class="card"><h2>Admin token</h2><div class="in"><p class="muted small">Making a new token restarts Vaultwarden for a moment and signs the admin page out everywhere.</p><button class="btn primary" data-act="admintoken" data-confirm="Make a new admin token? The old one stops working.">New admin token</button></div></div>
+      <div class="card"><h2>Who may join</h2><div class="in">
+        <table><tbody>
+          <tr><td class="k">Sign-ups</td><td><span id="adm-signups"></span> <span class="row" style="display:inline-flex" id="adm-signups-btn"></span></td></tr>
+          <tr><td class="k">Invitations</td><td><span id="adm-invites"></span> <span class="row" style="display:inline-flex" id="adm-invites-btn"></span></td></tr>
+          <tr><td class="k">Password hints on the sign-in page</td><td><span id="adm-hints"></span> <span class="row" style="display:inline-flex" id="adm-hints-btn"></span></td></tr>
+        </tbody></table>
+        <p class="muted small" style="margin-top:10px">With sign-ups closed, people join by invitation from the Users tab (or the admin page). Hints on the sign-in page let anyone type an email and see its hint — keep them off unless you need them.</p></div></div>
+    </section>
+
+    <section data-page="users" hidden>
+      <div class="note">Every account on this Vaultwarden. A locked-out user who lost their second factor: <b>Remove 2FA</b> lets them in with their master password. A lost master password can't be recovered by anyone — that's the point — only a new account can be made.</div>
+      <div class="mods-bar" style="display:flex;gap:8px;align-items:center;margin-bottom:12px"><input type="search" id="users-q" placeholder="Search users…" autocomplete="off" style="max-width:300px"><span class="muted small" id="users-count"></span></div>
+      <div class="card"><table><thead><tr><th>Email</th><th>Name</th><th>Status</th><th>2FA</th><th class="n">Items</th><th class="n">Attachments</th><th>Last active</th><th class="n"></th></tr></thead><tbody id="users"></tbody></table></div>
+      <div class="card"><h2>Invite someone</h2><div class="in"><label class="f"><span>Email</span><input type="text" id="invite-email" placeholder="them@example.com"></label><button class="btn primary" id="invite" data-app>Invite</button><p class="muted small">They get an email if SMTP is configured; otherwise they can sign up with that address while sign-ups are open.</p></div></div>
+    </section>
+
+    <section data-page="mail" hidden>
+      <div class="note">Vaultwarden sends invitations, verification mails, 2FA emails and new-device alerts through SMTP, configured on the <a id="mail-admin-link" href="#" target="_blank" rel="noopener">admin page → SMTP Email Settings</a>. Test it here.</div>
+      <div class="tiles" id="mail-tiles"></div>
+      <div class="card"><h2>Send a test email</h2><div class="in"><label class="f"><span>To</span><input type="text" id="smtp-email" placeholder="you@example.com"></label><button class="btn primary" id="smtptest" data-app>Send</button></div></div>
+    </section>
+
+    <section data-page="activity" hidden>
+      <div class="note">Failed sign-ins, wrong admin tokens and lockouts, from Vaultwarden's own log (it keeps the last days). Twenty or more failures in an hour raise a DSM notification. Vaultwarden already slows repeated attempts (10 per minute per address).</div>
+      <div class="tiles" id="activity-tiles"></div>
+      <div class="card" id="activity-byip-card" hidden><h2>Failed sign-ins in the last 24 hours, by address</h2><table><thead><tr><th>Address</th><th class="n">Attempts</th></tr></thead><tbody id="activity-byip"></tbody></table></div>
+      <div class="card"><h2>Recent failures</h2><div class="in"><pre id="activity-log">…</pre></div></div>
+    </section>

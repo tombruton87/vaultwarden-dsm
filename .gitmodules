@@ -1,0 +1,3 @@
+[submodule "chassis"]
+	path = chassis
+	url = /docker/dsm-app-chassis

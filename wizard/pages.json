@@ -1,0 +1,11 @@
+, {
+    "step_title": "Accounts",
+    "items": [{
+        "type": "singleselect",
+        "desc": "After the install, open Vaultwarden's address and create your own account first. Then decide who else may create one. Sign-ups can be switched on and off later in the Vaultwarden window; invitations from the admin page always work.",
+        "subitems": [
+            { "key": "wizard_signups_open", "desc": "Anyone who can reach it can create an account (switch off once yours exists)", "defaultValue": true },
+            { "key": "wizard_signups_closed", "desc": "No sign-ups: I'll invite people from the admin page", "defaultValue": false }
+        ]
+    }]
+}
