@@ -14,6 +14,7 @@ USER_UUID='$uuid'" ;;
 }
 app_cgi_settings() {   # body → appends TLS to $lines, or errors
   local tls; tls=$(param tls "$1")
+  [[ -z "$tls" ]] && return 0   # not sent: HTTPS stays as it is
   [[ "$tls" =~ ^(dsm|self|off)$ ]] || error "400 Bad Request" "HTTPS is DSM's certificate, self-signed, or off."
   lines="$lines
 TLS='$tls'"
