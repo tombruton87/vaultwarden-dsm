@@ -124,8 +124,13 @@ fix_url_scheme() {   # the address's scheme follows the HTTPS mode → 0 when it
   elif [[ "$(env_get TLS)" == off && "$(env_get SSL_PROXY)" == 0 && "$url" == https://* ]]; then env_set APP_URL "http://${url#https://}"; say "the address is http://${url#https://} — HTTPS is off and nothing in front provides it"
   else return 1; fi
 }
+proxy_volume() {   # made before compose's first up, so made with compose's labels (else compose warns it isn't its own)
+  docker volume inspect "${PKG_NAME}_proxy" >/dev/null 2>&1 && return 0
+  docker volume create --label com.docker.compose.project="$PKG_NAME" --label com.docker.compose.volume=proxy "${PKG_NAME}_proxy" >/dev/null
+}
 setup_proxy() {   # the proxy's config and certificate for the chosen mode (every start, and when the setting changes)
   local mode source tarf="$VAR/.cert.tar"
+  proxy_volume || { MSG="The proxy's volume couldn't be made — see the log."; return 1; }
   [[ -n "$(env_get TLS)" ]] || { env_set TLS dsm; say "upgrade from 1.0: HTTPS with DSM's certificate is on now (the Site address tab can change it)"; }
   fix_url_scheme || true
   mode=$(env_get TLS); source=$mode; : > "$tarf"

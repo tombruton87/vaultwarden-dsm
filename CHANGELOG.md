@@ -1,3 +1,10 @@
+## 1.1.2 — 2026-10-09
+
+- A new icon: Vaultwarden's own cog-and-V mark on a slate tile shaped like
+  DSM's own icons, in Package Center, the main menu and the window.
+- The HTTPS proxy's volume is made with Docker Compose's labels, so Compose
+  no longer warns that it isn't its own.
+
 ## 1.1.1 — 2026-10-09
 
 - Upgrading from 1.0.0 left the address (and so every link in the window and

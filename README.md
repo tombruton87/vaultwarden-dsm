@@ -1,3 +1,5 @@
+<img src="docs/icon.png" width="96" align="right" alt="">
+
 # Vaultwarden for Synology DSM
 
 A DSM 7 package that installs [Vaultwarden](https://github.com/dani-garcia/vaultwarden)
@@ -8,7 +10,7 @@ clean removal. It serves **HTTPS itself**, with DSM's own certificate. Built on 
 
 ## Download
 
-**[Download vaultwarden-1.1.1-1.spk](https://github.com/tombruton87/vaultwarden-dsm/releases/download/v1.1.1/vaultwarden-1.1.1-1.spk)** — or see [Releases](https://github.com/tombruton87/vaultwarden-dsm/releases/latest) for the newest.
+**[Download vaultwarden-1.1.2-1.spk](https://github.com/tombruton87/vaultwarden-dsm/releases/download/v1.1.2/vaultwarden-1.1.2-1.spk)** — or see [Releases](https://github.com/tombruton87/vaultwarden-dsm/releases/latest) for the newest.
 Install: Package Center → Manual Install → the `.spk` (DSM 7.2.1+; Container
 Manager is installed first if missing). The wizard asks for the NAS's address,
 a port, a time zone, whether sign-ups are open, and how to do HTTPS. Then open
@@ -71,3 +73,9 @@ tests/            steps for the chassis harness
 ```
 
 Build: `chassis/build.sh . N`. Test: `chassis/tests/e2e.sh . up && chassis/tests/e2e.sh . act` on any Linux box with Docker.
+
+## Credits
+
+The icon is Vaultwarden's own mark (from the `vaultwarden/server` image) on a
+DSM-style tile. Vaultwarden is an independent project and not affiliated with
+Bitwarden, Inc.; this package is not affiliated with either, or with Synology.
