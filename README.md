@@ -8,7 +8,7 @@ clean removal. Built on the [DSM app chassis](https://github.com/tombruton87/dsm
 
 ## Download
 
-See [Releases](https://github.com/tombruton87/vaultwarden-dsm/releases/latest).
+**[Download vaultwarden-1.0.0-1.spk](https://github.com/tombruton87/vaultwarden-dsm/releases/download/v1.0.0/vaultwarden-1.0.0-1.spk)** — or see [Releases](https://github.com/tombruton87/vaultwarden-dsm/releases/latest) for the newest.
 Install: Package Center → Manual Install → the `.spk` (DSM 7.2.1+; Container
 Manager is installed first if missing). The wizard asks for the NAS's address,
 a port, a time zone and whether sign-ups are open. Then open the address,
