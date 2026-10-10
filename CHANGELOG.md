@@ -1,3 +1,11 @@
+## 1.1.3 — 2026-10-10
+
+- The Copy button for the admin token works when DSM is opened over plain
+  HTTP (http://nas:5000), where browsers don't offer the clipboard API. If
+  copying is refused, the token is selected with a Ctrl+C hint.
+- Built on the latest chassis (volumes made with Docker Compose's labels;
+  shared HTTPS helpers).
+
 ## 1.1.2 — 2026-10-09
 
 - A new icon: Vaultwarden's own cog-and-V mark on a slate tile shaped like
